@@ -1,13 +1,7 @@
 package com.example.Kotlintraining003
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 // SpringBoot で、RESTfull APIのエンドポイントとして扱われるようにする
 // @SpringBootApplication: SpringBoot でリクエストを処理するクラスであることの宣言
@@ -58,7 +52,7 @@ class SampleController(
     // URLマッピングのアノテーションの値に、{}で囲んだ文字列を与えると、
     // パスパラメータとしてメソッドの引数で受け取れる
     // 今回の例では、 /path-param-test/xxx が受け取れる
-    @GetMapping("path-param-test/{name}") // path-param-test/xxx
+    @GetMapping("path-param-test/{name}") // GET /path-param-test/xxx
     fun pathParameterTest(
         // パスパラメータの値を受け取る引数には、@PathVariable をつける必要がある
         // デフォルトでは、パスパラメータを含めないURLへのアクセスは
@@ -66,5 +60,16 @@ class SampleController(
         @PathVariable("name") pathName: String
     ): String {
         return "path parameter `name` is: $pathName"
+    }
+
+    @GetMapping("/request-body-as-string") // GET /request-body-as-string
+    fun requestBodyAsStringTest(
+        // URLマッピングしたコントローラクラスのメソッドの引数に
+        // @RequestBody アノテーションをつけると、リクエストボディの内容を受け取ることができる
+        // @RequestBody アノテーションをつけているURLに、リクエストボディなしでリクエストすると、
+        // デフォルトで400 Bad Request になる
+        @RequestBody requestBody: String
+    ): String {
+        return "request body data is: $requestBody"
     }
 }
