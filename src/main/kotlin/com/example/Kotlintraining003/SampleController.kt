@@ -3,8 +3,10 @@ package com.example.Kotlintraining003
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 // SpringBoot で、RESTfull APIのエンドポイントとして扱われるようにする
@@ -39,5 +41,30 @@ class SampleController(
     @DeleteMapping("/sample") // DELETE /sample
     fun deleteSample(): String {
         return sampleService.deleteSample()
+    }
+
+    @GetMapping("query-param-test") // GET /query-param-test?name=xxx
+    fun queryParameterTest(
+        // @RequestParam アノテーションをリクエストにマッピングしたメソッドの引数につけると、
+        // アノテーションで指定した名前のクエリストリングの内容を引数で受け取れる
+        // 今回の例では、/query-param-test?name=xxx が受け取れるようになる
+        // デフォルトでは、@RequestParam で指定したクエリパラメータがない場合、
+        // 400 BadRequest になる(required paramとして扱われる)
+        @RequestParam("name") queryName: String
+    ): String {
+        return "query parameter `name` is: $queryName"
+    }
+
+    // URLマッピングのアノテーションの値に、{}で囲んだ文字列を与えると、
+    // パスパラメータとしてメソッドの引数で受け取れる
+    // 今回の例では、 /path-param-test/xxx が受け取れる
+    @GetMapping("path-param-test/{name}") // path-param-test/xxx
+    fun pathParameterTest(
+        // パスパラメータの値を受け取る引数には、@PathVariable をつける必要がある
+        // デフォルトでは、パスパラメータを含めないURLへのアクセスは
+        // 404 Not Found になる(required path として扱われる)
+        @PathVariable("name") pathName: String
+    ): String {
+        return "path parameter `name` is: $pathName"
     }
 }
