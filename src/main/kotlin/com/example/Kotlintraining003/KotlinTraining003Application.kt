@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 // @SpringBootApplication アノテーション
-// SpringBootの実行時に最初に呼び出されるクラスを示すためのアノテーション
+// SpringBootの実行時に、リクエストを処理するためのクラスとして扱われるようになる
 @SpringBootApplication
 class KotlinTraining003Application
 
