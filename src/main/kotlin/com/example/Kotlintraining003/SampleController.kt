@@ -83,4 +83,10 @@ class SampleController(
     ): String {
         return "request body data as class is: $requestBodyReceptor"
     }
+
+    @GetMapping("/response-body-as-class")
+    fun responseBodyAsClassTest():ResponseBodySample {
+        val responseBody = ResponseBodySample("Jack", 20)
+        return responseBody
+    }
 }
