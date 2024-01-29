@@ -72,4 +72,15 @@ class SampleController(
     ): String {
         return "request body data is: $requestBody"
     }
+
+    @GetMapping("/request-body-as-class")
+    fun requestBodyAsClassTest(
+        // @RequestBody アノテーションをつけた引数は、
+        // クラス(型)を指定することでそのクラスのインスタンスとして扱えるようになる
+        // 今回は data という プロパティを持つクラス requestBodyReceptorSample を利用しているので、
+        // RequestBody に data というプロパティを持つJSONが送られなければならない
+        @RequestBody requestBodyReceptor: RequestBodyReceptorSample
+    ): String {
+        return "request body data as class is: $requestBodyReceptor"
+    }
 }
