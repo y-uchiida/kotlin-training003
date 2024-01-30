@@ -12,10 +12,10 @@ import java.time.LocalDate
 @Entity
 data class User(
 	// コンストラクタで受け取るべきプロパティは、引数に設定する
-	var name: String,
-	var email: String,
-	var password: String,
-	var registered_at: LocalDate,
+	var name: String = "",
+	var email: String = "",
+	var password: String = "",
+	var registered_at: LocalDate = LocalDate.now(),
 ) {
 	// エンティティにおいて特別な役割を持つプロパティは、クラス定義内でアノテーションをつけて宣言する
 	// 例えば id は、データベースのプライマリキーとして扱うものなので、
