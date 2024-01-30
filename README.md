@@ -25,13 +25,13 @@ Kotlin でSpring boot を扱ってみたサンプルです。
     docker-compose up -d
     ```
 
-3. IntelliJ IDEA でプロジェクトを開く
+3. プロジェクトを実行
 
-4. プロジェクトをビルド
+    ```bash
+    ./gradlew bootRun
+    ```
 
-5. プロジェクトを実行
-
-6. ブラウザーで <http://localhost:8080> にアクセス
+4. ブラウザーで <http://localhost:8080> にアクセス
 
 ## データベースの確認
 
