@@ -3,12 +3,12 @@ package com.example.Kotlintraining003.Controllers
 import com.example.Kotlintraining003.Entities.User
 import com.example.Kotlintraining003.Exceptions.ResourceNotFoundException
 import com.example.Kotlintraining003.Repositories.UserRepository
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import java.util.Optional
 
 // @RequestMapping アノテーションで、
@@ -34,5 +34,17 @@ class UserController (
         val user = repository.findById(id)
             .orElseThrow { ResourceNotFoundException("User not found with id $id") }
         return ResponseEntity.ok(user)
+    }
+
+    /**
+     * name と email でユーザーを検索する
+     */
+    @GetMapping("/search") // GET /users/search
+    fun searchUser(
+        @RequestParam("name") name: String?,
+        @RequestParam("email") email: String?,
+    ): List<User> {
+        val result = repository.findByNameAndEmail(name, email)
+        return result
     }
 }
