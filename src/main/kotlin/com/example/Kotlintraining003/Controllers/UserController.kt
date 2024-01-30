@@ -4,11 +4,13 @@ import com.example.Kotlintraining003.Entities.User
 import com.example.Kotlintraining003.Exceptions.ResourceNotFoundException
 import com.example.Kotlintraining003.Repositories.UserRepository
 import com.example.Kotlintraining003.RequestBodies.User.CreateUserRequestBody
+import com.example.Kotlintraining003.RequestBodies.User.UpdateUserRequestBody
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -54,6 +56,28 @@ class UserController (
             .orElseThrow { ResourceNotFoundException("User not found with id $id") }
         return ResponseEntity.ok(user)
     }
+
+    /**
+     * リクエストボディで受け取った値を用いてuser テーブルの値を更新する
+     * 今回はサンプルとして、name のみ更新できる実装とした
+     * email などをリクエストボディに含めて送信しても何も起こらない仕様になっている
+     * レスポンスボディは無し、ステータスコードは204 No Content
+     */
+    // ResponseEntityのメソッドは、HTTPステータスコードにそれぞれ対応するものが用意されているので、それを利用する
+    // 今回はResponseEntity.noContent()
+    // レスポンスボディは空なので、返り値の型定義はResponseEntity<Void>
+    @PutMapping("/{id}") // PUT /users/:id
+    fun updateUser(
+        @PathVariable id: Long,
+        @RequestBody request: UpdateUserRequestBody
+    ): ResponseEntity<Void> {
+        val user = repository.findById(id)
+            .orElseThrow { ResourceNotFoundException("User not found with id $id") }
+        user.name = request.name
+        repository.save(user)
+        return ResponseEntity.noContent().build()
+    }
+
 
     /**
      * name と email でユーザーを検索する
