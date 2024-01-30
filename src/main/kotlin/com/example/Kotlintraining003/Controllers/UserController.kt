@@ -18,7 +18,7 @@ import java.util.Optional
 class UserController (
     val repository: UserRepository
 ) {
-    @GetMapping("/") // GET /users
+    @GetMapping("") // GET /users
     // User エンティティをリポジトリを通じて取得し、
     // JSON に変換してレスポンスする
     fun getUsers(): List<User> {
