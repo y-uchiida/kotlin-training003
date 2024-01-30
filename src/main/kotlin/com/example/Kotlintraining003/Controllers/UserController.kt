@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -78,6 +79,18 @@ class UserController (
         return ResponseEntity.noContent().build()
     }
 
+    @DeleteMapping("/{id}") // DELETE /users/:id
+    fun deleteUser(
+        @PathVariable id: Long
+    ): ResponseEntity<Void> {
+        // データ存在チェックのために、ユーザーを取得
+        // 存在しないIDが指定されていた場合は 404 Not Found
+        // (例外発生時の共通処理として RestExceptionHandler が挙動を定義している)
+        val user = repository.findById(id)
+            .orElseThrow { ResourceNotFoundException("User not found with id $id") }
+        repository.delete(user)
+        return ResponseEntity.noContent().build()
+    }
 
     /**
      * name と email でユーザーを検索する
