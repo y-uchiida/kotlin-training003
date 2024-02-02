@@ -5,6 +5,7 @@ import com.example.Kotlintraining003.Exceptions.ResourceNotFoundException
 import com.example.Kotlintraining003.Repositories.UserRepository
 import com.example.Kotlintraining003.RequestBodies.User.CreateUserRequestBody
 import com.example.Kotlintraining003.RequestBodies.User.UpdateUserRequestBody
+import com.example.Kotlintraining003.Services.UserService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
@@ -22,15 +23,15 @@ import java.util.Optional
 @RestController
 @RequestMapping("/users")
 class UserController (
-    val repository: UserRepository
+    // Service 層のクラスを用いてCRUD操作を行う
+    // Controller 層は、repository 層に依存しないようにする
+    val service: UserService
 ) {
     @GetMapping("") // GET /users
     // User エンティティをリポジトリを通じて取得し、
     // JSON に変換してレスポンスする
     fun getUsers(): List<User> {
-        val users = repository.findAll()
-
-        return users
+        return service.getUsers()
     }
 
     /**
@@ -44,8 +45,7 @@ class UserController (
     fun createUser(
         @RequestBody request: CreateUserRequestBody
     ): ResponseEntity<Void> {
-        val newUser = User(request.name, request.email, request.password)
-        repository.save(newUser)
+        service.storeUser(request.name, request.email, request.password)
         return ResponseEntity.noContent().build()
     }
 
@@ -53,8 +53,7 @@ class UserController (
     fun getUser(
         @PathVariable id: Long
     ): ResponseEntity<User> {
-        val user = repository.findById(id)
-            .orElseThrow { ResourceNotFoundException("User not found with id $id") }
+        val user = service.findUser(id)
         return ResponseEntity.ok(user)
     }
 
@@ -72,10 +71,7 @@ class UserController (
         @PathVariable id: Long,
         @RequestBody request: UpdateUserRequestBody
     ): ResponseEntity<Void> {
-        val user = repository.findById(id)
-            .orElseThrow { ResourceNotFoundException("User not found with id $id") }
-        user.name = request.name
-        repository.save(user)
+        service.updateUser(id, request.name)
         return ResponseEntity.noContent().build()
     }
 
@@ -83,12 +79,7 @@ class UserController (
     fun deleteUser(
         @PathVariable id: Long
     ): ResponseEntity<Void> {
-        // データ存在チェックのために、ユーザーを取得
-        // 存在しないIDが指定されていた場合は 404 Not Found
-        // (例外発生時の共通処理として RestExceptionHandler が挙動を定義している)
-        val user = repository.findById(id)
-            .orElseThrow { ResourceNotFoundException("User not found with id $id") }
-        repository.delete(user)
+        service.deleteUser(id)
         return ResponseEntity.noContent().build()
     }
 
@@ -100,7 +91,6 @@ class UserController (
         @RequestParam("name") name: String?,
         @RequestParam("email") email: String?,
     ): List<User> {
-        val result = repository.findByNameAndEmail(name, email)
-        return result
+        return service.searchUser(name, email)
     }
 }
