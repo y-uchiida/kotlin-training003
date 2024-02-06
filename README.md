@@ -19,13 +19,19 @@ Kotlin でSpring boot を扱ってみたサンプルです。
     cp .env.example .env
     ```
 
-2. Docker コンテナーを起動
+2. .application.properties ファイルを複製
 
     ```bash
-    docker-compose up -d
+    cp application.properties.example application.properties
     ```
 
-3. プロジェクトを実行
+3. Docker コンテナーを起動
+
+    ```bash
+    docker compose up -d
+    ```
+
+4. プロジェクトを実行
 
     ```bash
     ./gradlew bootRun
